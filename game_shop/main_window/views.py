@@ -7,9 +7,6 @@ from .routing_logic import create_new_user, check_user, create_order, get_user_o
 import bs4 as BeautifulSoup
 
 
-def show_authpage(request):
-    return render(request, 'authpage.html')
-
 def show_regpage(request):
     return render(request, 'regpage.html')
 
@@ -28,7 +25,7 @@ def show_orderpage_cringe(request):
 def show_my_orders(request):
     return render(request, 'my_orders.html')
 
-def sign_in(request):
+def checkuser(request):
     try:
         if request.method == "POST":
             email = request.POST.get("email")
@@ -43,7 +40,7 @@ def sign_in(request):
                     return HttpResponseRedirect('http://127.0.0.1:8000/')
                 case 0:
                     messages.error(request, 'ничего не найдено')
-                    return render(request, "authpage.html", data)
+                    # return render(request, "authpage.html", data)
     except IntegrityError:
         data = {
             'email': email,
@@ -90,7 +87,7 @@ def create_order_caribian(request):
             }
             match order_state:
                 case 'success':
-                    return HttpResponseRedirect('http://127.0.0.1:8000/homepage')
+                    return HttpResponseRedirect('http://127.0.0.1:8000/')
                 case 'unsuccess':
                     messages.error(request, 'Заказ не создан')
                     return render(request, "orders_caribian.html", data)
@@ -117,7 +114,7 @@ def create_order_archam(request):
             }
             match order_state:
                 case 'success':
-                    return HttpResponseRedirect('http://127.0.0.1:8000/homepage')
+                    return HttpResponseRedirect('http://127.0.0.1:8000/')
                 case 'unsuccess':
                     messages.error(request, 'Заказ не создан')
                     return render(request, "orders_archam.html", data)
@@ -144,7 +141,7 @@ def create_order_cringe(request):
             }
             match order_state:
                 case 'success':
-                    return HttpResponseRedirect('http://127.0.0.1:8000/homepage')
+                    return HttpResponseRedirect('http://127.0.0.1:8000/')
                 case 'unsuccess':
                     messages.error(request, 'Заказ не создан')
                     return render(request, "orders_cringe.html", data)
@@ -161,21 +158,31 @@ def get_my_orders(request):
     try:
         if request.method == "POST":
             email = request.POST.get("email")
-            user_orders = get_user_orders(email=email)
+            password = request.POST.get("password")
+            user_status = check_user(email=email, password=password)
             data = {
-                'orders': user_orders,
+                'email': email,
+                'password': password
             }
-            if user_orders:
-                for item in user_orders:
-                    messages.error(request, f"номер заказа: {item[0]} название игры: {item[1]} цена: {item[2]}\n")
-                    # result += f"номер заказа: {item[0]} название игры: {item[1]} цена: {item[2]}\n"
-                return render(request, "my_orders.html", data)
-            else:
-                messages.error(request, 'Заказов не найдено')
-                return render(request, "my_orders.html", data)
+            match user_status:
+                case 1:
+                    user_orders = get_user_orders(email=email)
+                    if user_orders:
+                        for item in user_orders:
+                            messages.error(request,
+                                           f"номер заказа: {item[0]} название игры: {item[1]} цена: {item[2]}, дата: {item[3]}\n")
+                        data['orders'] = user_orders
+                        return render(request, "my_orders.html", data)
+                    else:
+                        messages.error(request, 'Заказов не найдено')
+                        return render(request, "my_orders.html", data)
+                case 0:
+                    messages.error(request, 'Ошибка, проверьте введенный данные')
+                    return render(request, "my_orders.html", data)
     except IntegrityError:
         data = {
             'email': email,
+            'password': password
         }
         messages.error(request, 'Ошибка, проверьте введенный данные')
         return render(request, "my_orders.html", data)

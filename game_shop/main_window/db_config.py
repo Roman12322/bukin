@@ -4,7 +4,6 @@ from sqlalchemy import create_engine
 All database configs could be placed here
 """
 
-
 class Config:
 
     def __init__(self):
