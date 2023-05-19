@@ -61,16 +61,17 @@ def sign_up(request):
             }
             match resp:
                 case 'success':
-                    return HttpResponseRedirect('http://127.0.0.1:8000/')
+                    messages.error(request, 'Вы успешно зарегистрированы')
+                    return render(request, "regpage.html", data)
                 case 'unsuccess':
-                    messages.error(request, 'Ошибка, проверьте введенный данные')
+                    messages.error(request, 'Ошибка, проверьте введенные данные')
                     return render(request, "regpage.html", data)
     except IntegrityError:
         data = {
             'email': email,
             'password': password,
         }
-        messages.error(request, 'Ошибка, проверьте введенный данные')
+        messages.error(request, 'Ошибка, проверьте введенные данные')
         return render(request, "regpage.html", data)
 
 def create_order_caribian(request):
@@ -97,7 +98,7 @@ def create_order_caribian(request):
             'price': price,
             'email': email,
         }
-        messages.error(request, 'Ошибка, проверьте введенный данные')
+        messages.error(request, 'Ошибка, проверьте введенные данные')
         return render(request, "orders_caribian.html", data)
 
 def create_order_archam(request):
@@ -124,7 +125,7 @@ def create_order_archam(request):
             'price': price,
             'email': email,
         }
-        messages.error(request, 'Ошибка, проверьте введенный данные')
+        messages.error(request, 'Ошибка, проверьте введенные данные')
         return render(request, "orders_archam.html", data)
 
 def create_order_cringe(request):
@@ -151,7 +152,7 @@ def create_order_cringe(request):
             'price': price,
             'email': email,
         }
-        messages.error(request, 'Ошибка, проверьте введенный данные')
+        messages.error(request, 'Ошибка, проверьте введенные данные')
         return render(request, "orders_cringe.html", data)
 
 def get_my_orders(request):
@@ -177,12 +178,12 @@ def get_my_orders(request):
                         messages.error(request, 'Заказов не найдено')
                         return render(request, "my_orders.html", data)
                 case 0:
-                    messages.error(request, 'Ошибка, проверьте введенный данные')
+                    messages.error(request, 'Ошибка, проверьте введенныe данные')
                     return render(request, "my_orders.html", data)
     except IntegrityError:
         data = {
             'email': email,
             'password': password
         }
-        messages.error(request, 'Ошибка, проверьте введенный данные')
+        messages.error(request, 'Ошибка, проверьте введенные данные')
         return render(request, "my_orders.html", data)
