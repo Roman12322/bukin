@@ -88,7 +88,8 @@ def create_order_caribian(request):
             }
             match order_state:
                 case 'success':
-                    return HttpResponseRedirect('http://127.0.0.1:8000/')
+                    messages.error(request, 'Заказ создан')
+                    return render(request, "orders_caribian.html", data)
                 case 'unsuccess':
                     messages.error(request, 'Заказ не создан')
                     return render(request, "orders_caribian.html", data)
@@ -115,7 +116,8 @@ def create_order_archam(request):
             }
             match order_state:
                 case 'success':
-                    return HttpResponseRedirect('http://127.0.0.1:8000/')
+                    messages.error(request, 'Заказ создан')
+                    return render(request, "orders_archam.html", data)
                 case 'unsuccess':
                     messages.error(request, 'Заказ не создан')
                     return render(request, "orders_archam.html", data)
@@ -142,7 +144,8 @@ def create_order_cringe(request):
             }
             match order_state:
                 case 'success':
-                    return HttpResponseRedirect('http://127.0.0.1:8000/')
+                    messages.error(request, 'Заказ создан')
+                    return render(request, "orders_cringe.html", data)
                 case 'unsuccess':
                     messages.error(request, 'Заказ не создан')
                     return render(request, "orders_cringe.html", data)
